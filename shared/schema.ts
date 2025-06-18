@@ -68,6 +68,7 @@ export const orderSchema = z.object({
   paymentMethod: z.enum(["card", "upi", "cod"]),
   shippingAddress: z.object({
     name: z.string(),
+    email: z.string().email(),
     phone: z.string(),
     address: z.string(),
     city: z.string(),

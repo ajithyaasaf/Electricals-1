@@ -11,7 +11,15 @@ import { useCart } from "@/hooks/useCart";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { initiatePayment, createOrder } from "@/utils/razorpay";
+import { 
+  processUPIPayment, 
+  processCardPayment, 
+  processCODPayment, 
+  validateCardNumber, 
+  validateExpiryDate, 
+  detectCardType,
+  type PaymentMethod as PaymentMethodType 
+} from "@/utils/payments";
 
 export default function Checkout() {
   const [, setLocation] = useLocation();
@@ -21,7 +29,7 @@ export default function Checkout() {
   const { t } = useLanguage();
 
   const [isProcessing, setIsProcessing] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState("card");
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethodType>("card");
   const [shippingInfo, setShippingInfo] = useState({
     name: user?.displayName || "",
     email: user?.email || "",
@@ -30,6 +38,16 @@ export default function Checkout() {
     city: "",
     state: "Tamil Nadu",
     pincode: "",
+  });
+
+  // Payment form state
+  const [upiId, setUpiId] = useState("");
+  const [cardData, setCardData] = useState({
+    cardNumber: "",
+    expiryMonth: "",
+    expiryYear: "",
+    cvv: "",
+    cardHolderName: "",
   });
 
   const handleInputChange = (field: string, value: string) => {
@@ -119,18 +137,49 @@ export default function Checkout() {
   };
 
   const handleOnlinePayment = async () => {
-    // Create Razorpay order
-    const orderResponse = await createOrder(total * 100); // Convert to paise
+    const paymentRequest = {
+      amount: total,
+      method: paymentMethod,
+      customerDetails: {
+        name: shippingInfo.name,
+        email: shippingInfo.email,
+        phone: shippingInfo.phone,
+        address: `${shippingInfo.address}, ${shippingInfo.city}, ${shippingInfo.state} - ${shippingInfo.pincode}`,
+      },
+      orderDetails: {
+        orderId: `ORD${Date.now()}`,
+        description: `Order for ${items.length} items from Electricals Madurai`,
+        items: items.map(item => ({
+          name: item.name,
+          quantity: item.quantity,
+          price: item.price,
+        })),
+      },
+    };
 
-    const options = {
-      key: import.meta.env.VITE_RAZORPAY_KEY_ID || "rzp_test_key",
-      amount: total * 100,
-      currency: "INR",
-      name: "Electricals",
-      description: "Electrical Tools & Equipment",
-      order_id: orderResponse.id,
-      handler: async (response: any) => {
-        // Verify payment and create order
+    let paymentResult;
+
+    try {
+      if (paymentMethod === "upi") {
+        if (!upiId) {
+          throw new Error("Please enter your UPI ID");
+        }
+        paymentResult = await processUPIPayment(paymentRequest, { upiId });
+      } else if (paymentMethod === "card") {
+        if (!cardData.cardNumber || !cardData.expiryMonth || !cardData.expiryYear || !cardData.cvv || !cardData.cardHolderName) {
+          throw new Error("Please fill in all card details");
+        }
+        if (!validateCardNumber(cardData.cardNumber)) {
+          throw new Error("Invalid card number");
+        }
+        if (!validateExpiryDate(cardData.expiryMonth, cardData.expiryYear)) {
+          throw new Error("Invalid expiry date");
+        }
+        paymentResult = await processCardPayment(paymentRequest, cardData);
+      }
+
+      if (paymentResult) {
+        // Create order after successful payment initiation
         const orderData = {
           userId: user?.uid || "",
           items,
@@ -138,13 +187,11 @@ export default function Checkout() {
           tax,
           shipping: 0,
           total,
-          paymentMethod: paymentMethod as "card" | "upi",
-          paymentStatus: "completed" as const,
+          paymentMethod: paymentMethod,
+          paymentStatus: paymentResult.status === "completed" ? "completed" as const : "pending" as const,
           status: "confirmed" as const,
           shippingAddress: shippingInfo,
-          razorpayPaymentId: response.razorpay_payment_id,
-          razorpayOrderId: response.razorpay_order_id,
-          razorpaySignature: response.razorpay_signature,
+          paymentId: paymentResult.id,
         };
 
         const orderResponse = await fetch("/api/orders", {
@@ -155,25 +202,26 @@ export default function Checkout() {
 
         if (orderResponse.ok) {
           const order = await orderResponse.json();
+          
+          if (paymentMethod === "upi" && paymentResult.paymentUrl) {
+            // Open UPI app or show QR code
+            window.open(paymentResult.paymentUrl, '_blank');
+          }
+
           toast({
-            title: "Payment Successful!",
-            description: "Your order has been placed successfully.",
+            title: "Payment Initiated!",
+            description: paymentResult.message || "Your payment is being processed.",
           });
+          
           clearCart();
           setLocation(`/order-confirmation/${order.id}`);
+        } else {
+          throw new Error("Failed to create order");
         }
-      },
-      prefill: {
-        name: shippingInfo.name,
-        email: shippingInfo.email,
-        contact: shippingInfo.phone,
-      },
-      theme: {
-        color: "#2563eb",
-      },
-    };
-
-    await initiatePayment(options);
+      }
+    } catch (error: any) {
+      throw new Error(error.message || "Payment processing failed");
+    }
   };
 
   if (items.length === 0) {

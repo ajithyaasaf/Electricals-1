@@ -135,7 +135,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         description: description || "Payment for Electricals Madurai",
       });
       
-      const paymentUrl = generateUPILink(upiId, amount, description || "Payment", payment.id);
+      const paymentUrl = generateUPILink(upiId, amount, description || "Payment");
       
       res.json({
         id: payment.id,

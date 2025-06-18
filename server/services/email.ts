@@ -78,7 +78,7 @@ export const sendOrderConfirmation = async (order: Order) => {
   try {
     const mailOptions = {
       from: '"Electricals Madurai" <noreply@electricals.com>',
-      to: order.shippingAddress.email || `${order.shippingAddress.phone}@sms.gateway.com`,
+      to: order.shippingAddress.email,
       subject: "Order Confirmation - Electricals",
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
