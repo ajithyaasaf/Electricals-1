@@ -4,7 +4,13 @@ import { storage } from "./storage";
 import { z } from "zod";
 import { insertProductSchema, insertOrderSchema, insertServiceBookingSchema } from "@shared/schema";
 import { sendBookingConfirmation } from "./services/email";
-import { createRazorpayOrder, verifyPayment } from "./services/payments";
+import { 
+  processUPIPayment, 
+  processCardPayment, 
+  processCODPayment, 
+  getPaymentStatus,
+  generateUPILink 
+} from "./services/payments";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   
@@ -109,37 +115,135 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Payment endpoints
-  app.post("/api/payments/create-order", async (req, res) => {
+  app.post("/api/payments/upi", async (req, res) => {
     try {
-      const { amount } = req.body;
+      const { amount, upiId, customerName, customerEmail, description } = req.body;
+      
       if (!amount || amount <= 0) {
         return res.status(400).json({ error: "Invalid amount" });
       }
       
-      const order = await createRazorpayOrder(amount);
-      res.json(order);
+      if (!upiId || !customerName || !customerEmail) {
+        return res.status(400).json({ error: "Missing required fields" });
+      }
+      
+      const payment = await processUPIPayment({
+        amount,
+        upiId,
+        customerName,
+        customerEmail,
+        description: description || "Payment for Electricals Madurai",
+      });
+      
+      const paymentUrl = generateUPILink(upiId, amount, description || "Payment", payment.id);
+      
+      res.json({
+        id: payment.id,
+        status: payment.status,
+        paymentUrl,
+        message: "UPI payment initiated. Please complete payment using your UPI app.",
+      });
     } catch (error) {
-      res.status(500).json({ error: "Failed to create payment order" });
+      res.status(500).json({ error: "Failed to process UPI payment" });
     }
   });
 
-  app.post("/api/payments/verify", async (req, res) => {
+  app.post("/api/payments/card", async (req, res) => {
     try {
-      const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+      const { 
+        amount, 
+        cardNumber, 
+        expiryMonth, 
+        expiryYear, 
+        cvv, 
+        cardHolderName, 
+        customerEmail, 
+        description 
+      } = req.body;
       
-      const isValid = verifyPayment({
-        razorpay_order_id,
-        razorpay_payment_id,
-        razorpay_signature,
+      if (!amount || amount <= 0) {
+        return res.status(400).json({ error: "Invalid amount" });
+      }
+      
+      if (!cardNumber || !expiryMonth || !expiryYear || !cvv || !cardHolderName || !customerEmail) {
+        return res.status(400).json({ error: "Missing required card details" });
+      }
+      
+      const payment = await processCardPayment({
+        amount,
+        cardNumber,
+        expiryMonth,
+        expiryYear,
+        cvv,
+        cardHolderName,
+        customerEmail,
+        description: description || "Payment for Electricals Madurai",
       });
       
-      if (isValid) {
-        res.json({ status: "success" });
-      } else {
-        res.status(400).json({ error: "Payment verification failed" });
-      }
+      res.json({
+        id: payment.id,
+        status: payment.status,
+        message: "Card payment processing. Please wait for confirmation.",
+      });
     } catch (error) {
-      res.status(500).json({ error: "Payment verification error" });
+      if (error instanceof Error) {
+        res.status(400).json({ error: error.message });
+      } else {
+        res.status(500).json({ error: "Failed to process card payment" });
+      }
+    }
+  });
+
+  app.post("/api/payments/cod", async (req, res) => {
+    try {
+      const { amount, customerName, customerEmail, customerPhone, address, description } = req.body;
+      
+      if (!amount || amount <= 0) {
+        return res.status(400).json({ error: "Invalid amount" });
+      }
+      
+      if (!customerName || !customerEmail || !customerPhone || !address) {
+        return res.status(400).json({ error: "Missing required customer details" });
+      }
+      
+      const payment = await processCODPayment({
+        amount,
+        customerName,
+        customerEmail,
+        customerPhone,
+        address,
+        description: description || "Cash on Delivery - Electricals Madurai",
+      });
+      
+      res.json({
+        id: payment.id,
+        status: payment.status,
+        message: "Cash on Delivery order confirmed. Payment will be collected upon delivery.",
+      });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to process COD payment" });
+    }
+  });
+
+  app.get("/api/payments/status/:paymentId", async (req, res) => {
+    try {
+      const { paymentId } = req.params;
+      const payment = await getPaymentStatus(paymentId);
+      
+      if (!payment) {
+        return res.status(404).json({ error: "Payment not found" });
+      }
+      
+      res.json({
+        id: payment.id,
+        status: payment.status,
+        amount: payment.amount,
+        method: payment.method,
+        createdAt: payment.createdAt,
+        completedAt: payment.completedAt,
+      });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch payment status" });
     }
   });
 
