@@ -1,0 +1,296 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(0, 0%, 100%);
+  --foreground: hsl(240, 10%, 3.9%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(240, 10%, 3.9%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(240, 10%, 3.9%);
+  --primary: hsl(207, 90%, 54%);
+  --primary-foreground: hsl(210, 40%, 98%);
+  --secondary: hsl(210, 40%, 96%);
+  --secondary-foreground: hsl(222.2, 84%, 4.9%);
+  --muted: hsl(210, 40%, 96%);
+  --muted-foreground: hsl(215.4, 16.3%, 46.9%);
+  --accent: hsl(210, 40%, 96%);
+  --accent-foreground: hsl(222.2, 84%, 4.9%);
+  --destructive: hsl(0, 84.2%, 60.2%);
+  --destructive-foreground: hsl(210, 40%, 98%);
+  --border: hsl(214.3, 31.8%, 91.4%);
+  --input: hsl(214.3, 31.8%, 91.4%);
+  --ring: hsl(222.2, 84%, 4.9%);
+  --radius: 0.5rem;
+  --chart-1: hsl(12, 76%, 61%);
+  --chart-2: hsl(173, 58%, 39%);
+  --chart-3: hsl(197, 37%, 24%);
+  --chart-4: hsl(43, 74%, 66%);
+  --chart-5: hsl(27, 87%, 67%);
+
+  /* Electrical Industry Colors */
+  --electric-50: hsl(214, 100%, 97%);
+  --electric-100: hsl(214, 95%, 93%);
+  --electric-200: hsl(213, 97%, 87%);
+  --electric-300: hsl(212, 96%, 78%);
+  --electric-400: hsl(213, 94%, 68%);
+  --electric-500: hsl(217, 91%, 60%);
+  --electric-600: hsl(221, 83%, 53%);
+  --electric-700: hsl(224, 76%, 48%);
+  --electric-800: hsl(226, 71%, 40%);
+  --electric-900: hsl(224, 64%, 33%);
+
+  --safety-50: hsl(33, 100%, 96%);
+  --safety-100: hsl(34, 100%, 92%);
+  --safety-200: hsl(32, 98%, 83%);
+  --safety-300: hsl(31, 97%, 72%);
+  --safety-400: hsl(27, 96%, 61%);
+  --safety-500: hsl(25, 95%, 53%);
+  --safety-600: hsl(21, 90%, 48%);
+  --safety-700: hsl(17, 88%, 40%);
+  --safety-800: hsl(15, 79%, 34%);
+  --safety-900: hsl(15, 75%, 28%);
+
+  --copper-50: hsl(33, 100%, 96%);
+  --copper-100: hsl(34, 100%, 92%);
+  --copper-200: hsl(32, 98%, 83%);
+  --copper-300: hsl(31, 97%, 72%);
+  --copper-400: hsl(27, 96%, 61%);
+  --copper-500: hsl(25, 95%, 53%);
+  --copper-600: hsl(30, 84%, 30%);
+  --copper-700: hsl(25, 78%, 26%);
+  --copper-800: hsl(24, 74%, 22%);
+  --copper-900: hsl(23, 69%, 18%);
+}
+
+.dark {
+  --background: hsl(222.2, 84%, 4.9%);
+  --foreground: hsl(210, 40%, 98%);
+  --card: hsl(222.2, 84%, 4.9%);
+  --card-foreground: hsl(210, 40%, 98%);
+  --popover: hsl(222.2, 84%, 4.9%);
+  --popover-foreground: hsl(210, 40%, 98%);
+  --primary: hsl(210, 40%, 98%);
+  --primary-foreground: hsl(222.2, 84%, 4.9%);
+  --secondary: hsl(217.2, 32.6%, 17.5%);
+  --secondary-foreground: hsl(210, 40%, 98%);
+  --muted: hsl(217.2, 32.6%, 17.5%);
+  --muted-foreground: hsl(215, 20.2%, 65.1%);
+  --accent: hsl(217.2, 32.6%, 17.5%);
+  --accent-foreground: hsl(210, 40%, 98%);
+  --destructive: hsl(0, 62.8%, 30.6%);
+  --destructive-foreground: hsl(210, 40%, 98%);
+  --border: hsl(217.2, 32.6%, 17.5%);
+  --input: hsl(217.2, 32.6%, 17.5%);
+  --ring: hsl(212.7, 26.8%, 83.9%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+@layer utilities {
+  /* Electric Industry Theme Colors */
+  .text-electric-50 { color: var(--electric-50); }
+  .text-electric-100 { color: var(--electric-100); }
+  .text-electric-200 { color: var(--electric-200); }
+  .text-electric-300 { color: var(--electric-300); }
+  .text-electric-400 { color: var(--electric-400); }
+  .text-electric-500 { color: var(--electric-500); }
+  .text-electric-600 { color: var(--electric-600); }
+  .text-electric-700 { color: var(--electric-700); }
+  .text-electric-800 { color: var(--electric-800); }
+  .text-electric-900 { color: var(--electric-900); }
+
+  .bg-electric-50 { background-color: var(--electric-50); }
+  .bg-electric-100 { background-color: var(--electric-100); }
+  .bg-electric-200 { background-color: var(--electric-200); }
+  .bg-electric-300 { background-color: var(--electric-300); }
+  .bg-electric-400 { background-color: var(--electric-400); }
+  .bg-electric-500 { background-color: var(--electric-500); }
+  .bg-electric-600 { background-color: var(--electric-600); }
+  .bg-electric-700 { background-color: var(--electric-700); }
+  .bg-electric-800 { background-color: var(--electric-800); }
+  .bg-electric-900 { background-color: var(--electric-900); }
+
+  .border-electric-50 { border-color: var(--electric-50); }
+  .border-electric-100 { border-color: var(--electric-100); }
+  .border-electric-200 { border-color: var(--electric-200); }
+  .border-electric-300 { border-color: var(--electric-300); }
+  .border-electric-400 { border-color: var(--electric-400); }
+  .border-electric-500 { border-color: var(--electric-500); }
+  .border-electric-600 { border-color: var(--electric-600); }
+  .border-electric-700 { border-color: var(--electric-700); }
+  .border-electric-800 { border-color: var(--electric-800); }
+  .border-electric-900 { border-color: var(--electric-900); }
+
+  .text-safety-50 { color: var(--safety-50); }
+  .text-safety-100 { color: var(--safety-100); }
+  .text-safety-200 { color: var(--safety-200); }
+  .text-safety-300 { color: var(--safety-300); }
+  .text-safety-400 { color: var(--safety-400); }
+  .text-safety-500 { color: var(--safety-500); }
+  .text-safety-600 { color: var(--safety-600); }
+  .text-safety-700 { color: var(--safety-700); }
+  .text-safety-800 { color: var(--safety-800); }
+  .text-safety-900 { color: var(--safety-900); }
+
+  .bg-safety-50 { background-color: var(--safety-50); }
+  .bg-safety-100 { background-color: var(--safety-100); }
+  .bg-safety-200 { background-color: var(--safety-200); }
+  .bg-safety-300 { background-color: var(--safety-300); }
+  .bg-safety-400 { background-color: var(--safety-400); }
+  .bg-safety-500 { background-color: var(--safety-500); }
+  .bg-safety-600 { background-color: var(--safety-600); }
+  .bg-safety-700 { background-color: var(--safety-700); }
+  .bg-safety-800 { background-color: var(--safety-800); }
+  .bg-safety-900 { background-color: var(--safety-900); }
+
+  .border-safety-50 { border-color: var(--safety-50); }
+  .border-safety-100 { border-color: var(--safety-100); }
+  .border-safety-200 { border-color: var(--safety-200); }
+  .border-safety-300 { border-color: var(--safety-300); }
+  .border-safety-400 { border-color: var(--safety-400); }
+  .border-safety-500 { border-color: var(--safety-500); }
+  .border-safety-600 { border-color: var(--safety-600); }
+  .border-safety-700 { border-color: var(--safety-700); }
+  .border-safety-800 { border-color: var(--safety-800); }
+  .border-safety-900 { border-color: var(--safety-900); }
+
+  .text-copper-50 { color: var(--copper-50); }
+  .text-copper-100 { color: var(--copper-100); }
+  .text-copper-200 { color: var(--copper-200); }
+  .text-copper-300 { color: var(--copper-300); }
+  .text-copper-400 { color: var(--copper-400); }
+  .text-copper-500 { color: var(--copper-500); }
+  .text-copper-600 { color: var(--copper-600); }
+  .text-copper-700 { color: var(--copper-700); }
+  .text-copper-800 { color: var(--copper-800); }
+  .text-copper-900 { color: var(--copper-900); }
+
+  .bg-copper-50 { background-color: var(--copper-50); }
+  .bg-copper-100 { background-color: var(--copper-100); }
+  .bg-copper-200 { background-color: var(--copper-200); }
+  .bg-copper-300 { background-color: var(--copper-300); }
+  .bg-copper-400 { background-color: var(--copper-400); }
+  .bg-copper-500 { background-color: var(--copper-500); }
+  .bg-copper-600 { background-color: var(--copper-600); }
+  .bg-copper-700 { background-color: var(--copper-700); }
+  .bg-copper-800 { background-color: var(--copper-800); }
+  .bg-copper-900 { background-color: var(--copper-900); }
+
+  .border-copper-50 { border-color: var(--copper-50); }
+  .border-copper-100 { border-color: var(--copper-100); }
+  .border-copper-200 { border-color: var(--copper-200); }
+  .border-copper-300 { border-color: var(--copper-300); }
+  .border-copper-400 { border-color: var(--copper-400); }
+  .border-copper-500 { border-color: var(--copper-500); }
+  .border-copper-600 { border-color: var(--copper-600); }
+  .border-copper-700 { border-color: var(--copper-700); }
+  .border-copper-800 { border-color: var(--copper-800); }
+  .border-copper-900 { border-color: var(--copper-900); }
+
+  /* Gradient utilities */
+  .from-electric-500 { --tw-gradient-from: var(--electric-500); }
+  .from-electric-600 { --tw-gradient-from: var(--electric-600); }
+  .from-electric-700 { --tw-gradient-from: var(--electric-700); }
+  .to-electric-600 { --tw-gradient-to: var(--electric-600); }
+  .to-electric-700 { --tw-gradient-to: var(--electric-700); }
+
+  .from-safety-500 { --tw-gradient-from: var(--safety-500); }
+  .from-safety-600 { --tw-gradient-from: var(--safety-600); }
+  .from-safety-700 { --tw-gradient-from: var(--safety-700); }
+  .to-safety-500 { --tw-gradient-to: var(--safety-500); }
+  .to-safety-600 { --tw-gradient-to: var(--safety-600); }
+  .to-safety-700 { --tw-gradient-to: var(--safety-700); }
+
+  .from-copper-600 { --tw-gradient-from: var(--copper-600); }
+  .from-copper-700 { --tw-gradient-from: var(--copper-700); }
+  .to-copper-700 { --tw-gradient-to: var(--copper-700); }
+
+  /* Hover states */
+  .hover\\:bg-electric-600:hover { background-color: var(--electric-600); }
+  .hover\\:bg-electric-700:hover { background-color: var(--electric-700); }
+  .hover\\:bg-safety-600:hover { background-color: var(--safety-600); }
+  .hover\\:bg-safety-700:hover { background-color: var(--safety-700); }
+
+  .hover\\:text-electric-400:hover { color: var(--electric-400); }
+  .hover\\:text-electric-600:hover { color: var(--electric-600); }
+  .hover\\:text-electric-700:hover { color: var(--electric-700); }
+
+  .hover\\:from-electric-700:hover { --tw-gradient-from: var(--electric-700); }
+  .hover\\:to-safety-700:hover { --tw-gradient-to: var(--safety-700); }
+}
+
+/* Custom scrollbar for webkit browsers */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(210, 40%, 96%);
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(215.4, 16.3%, 46.9%);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(222.2, 84%, 4.9%);
+}
+
+/* Loading animations */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Text truncation utilities */
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.line-clamp-3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+/* Focus ring improvements */
+.focus-ring {
+  @apply focus:outline-none focus:ring-2 focus:ring-electric-500 focus:ring-offset-2;
+}
+
+/* Enhanced button focus states */
+button:focus-visible {
+  outline: 2px solid var(--electric-500);
+  outline-offset: 2px;
+}
+
+/* Mobile-first responsive enhancements */
+@media (max-width: 768px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
