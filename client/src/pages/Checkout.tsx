@@ -343,7 +343,7 @@ export default function Checkout() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod}>
+                <RadioGroup value={paymentMethod} onValueChange={(value) => setPaymentMethod(value as PaymentMethodType)}>
                   <div className="flex items-center space-x-3 p-4 border rounded-lg hover:bg-gray-50">
                     <RadioGroupItem value="card" id="card" />
                     <Label htmlFor="card" className="flex items-center gap-3 cursor-pointer">
@@ -377,6 +377,126 @@ export default function Checkout() {
                     </Label>
                   </div>
                 </RadioGroup>
+
+                {/* Payment Details Forms */}
+                {paymentMethod === "upi" && (
+                  <div className="mt-6 p-4 border rounded-lg bg-blue-50">
+                    <Label htmlFor="upiId" className="text-sm font-medium">UPI ID</Label>
+                    <Input
+                      id="upiId"
+                      type="text"
+                      placeholder="Enter your UPI ID (e.g., yourname@paytm)"
+                      value={upiId}
+                      onChange={(e) => setUpiId(e.target.value)}
+                      className="mt-2"
+                    />
+                    <p className="text-xs text-gray-600 mt-2">
+                      You'll be redirected to your UPI app to complete the payment
+                    </p>
+                  </div>
+                )}
+
+                {paymentMethod === "card" && (
+                  <div className="mt-6 p-4 border rounded-lg bg-blue-50 space-y-4">
+                    <div>
+                      <Label htmlFor="cardNumber" className="text-sm font-medium">Card Number</Label>
+                      <Input
+                        id="cardNumber"
+                        type="text"
+                        placeholder="1234 5678 9012 3456"
+                        value={cardData.cardNumber}
+                        onChange={(e) => {
+                          const value = e.target.value.replace(/\D/g, '').replace(/(\d{4})(?=\d)/g, '$1 ');
+                          setCardData(prev => ({ ...prev, cardNumber: value }));
+                        }}
+                        maxLength={19}
+                        className="mt-2"
+                      />
+                      {cardData.cardNumber && (
+                        <p className="text-xs text-gray-600 mt-1">
+                          Card Type: {detectCardType(cardData.cardNumber)}
+                        </p>
+                      )}
+                    </div>
+
+                    <div>
+                      <Label htmlFor="cardHolderName" className="text-sm font-medium">Cardholder Name</Label>
+                      <Input
+                        id="cardHolderName"
+                        type="text"
+                        placeholder="Name as on card"
+                        value={cardData.cardHolderName}
+                        onChange={(e) => setCardData(prev => ({ ...prev, cardHolderName: e.target.value }))}
+                        className="mt-2"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-3">
+                      <div>
+                        <Label htmlFor="expiryMonth" className="text-sm font-medium">Month</Label>
+                        <Input
+                          id="expiryMonth"
+                          type="text"
+                          placeholder="MM"
+                          value={cardData.expiryMonth}
+                          onChange={(e) => {
+                            const value = e.target.value.replace(/\D/g, '').slice(0, 2);
+                            setCardData(prev => ({ ...prev, expiryMonth: value }));
+                          }}
+                          maxLength={2}
+                          className="mt-2"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="expiryYear" className="text-sm font-medium">Year</Label>
+                        <Input
+                          id="expiryYear"
+                          type="text"
+                          placeholder="YYYY"
+                          value={cardData.expiryYear}
+                          onChange={(e) => {
+                            const value = e.target.value.replace(/\D/g, '').slice(0, 4);
+                            setCardData(prev => ({ ...prev, expiryYear: value }));
+                          }}
+                          maxLength={4}
+                          className="mt-2"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="cvv" className="text-sm font-medium">CVV</Label>
+                        <Input
+                          id="cvv"
+                          type="password"
+                          placeholder="123"
+                          value={cardData.cvv}
+                          onChange={(e) => {
+                            const value = e.target.value.replace(/\D/g, '').slice(0, 4);
+                            setCardData(prev => ({ ...prev, cvv: value }));
+                          }}
+                          maxLength={4}
+                          className="mt-2"
+                        />
+                      </div>
+                    </div>
+
+                    <p className="text-xs text-gray-600">
+                      Your card information is secure and encrypted
+                    </p>
+                  </div>
+                )}
+
+                {paymentMethod === "cod" && (
+                  <div className="mt-6 p-4 border rounded-lg bg-green-50">
+                    <div className="flex items-center gap-2 text-green-700">
+                      <Banknote className="w-4 h-4" />
+                      <span className="font-medium">Cash on Delivery Selected</span>
+                    </div>
+                    <p className="text-sm text-green-600 mt-2">
+                      You will pay ₹{total.toLocaleString()} when your order is delivered to your doorstep.
+                      Please ensure someone is available to receive the order and make payment.
+                    </p>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </div>

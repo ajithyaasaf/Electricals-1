@@ -11,7 +11,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Products() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
   const [sortBy, setSortBy] = useState("name");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const { t } = useLanguage();
@@ -21,7 +21,7 @@ export default function Products() {
   });
 
   const categories = [
-    { value: "", label: "All Categories" },
+    { value: "all", label: "All Categories" },
     { value: "switches", label: "Switches & Outlets" },
     { value: "wires", label: "Wires & Cables" },
     { value: "tools", label: "Professional Tools" },
