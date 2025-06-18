@@ -1,0 +1,112 @@
+You are a full-stack expert developer. Build a complete, production-ready e-commerce and service booking web application using the following stack:
+
+Frontend: React (with TailwindCSS or Material UI for clean, responsive design)
+
+Backend: Node.js + Express
+
+Database: Firebase Firestore (NoSQL)
+
+Deployment Environment: Assume this will run in Replit initially, but should be portable to Vercel/Render/Firebase hosting later.
+
+This app is for a company called Electricals based in Madurai, and it serves as an online store (1,000+ products) for electrical tools and also provides electrical and plumbing services with booking capabilities. The system must prioritize Google-level user experience—meaning: fast load times, mobile-first responsive design, seamless interactions, accessible UI, and error-free workflows.
+
+🔹 Modules & Features Required (Do NOT miss any):
+🛒 E-Commerce Product Catalog:
+Products stored in Firestore with fields: id, name, description, price, category, images, stock, rating, brand, specs.
+
+Categories: switches, wires, lights, tools, circuit breakers, fans, etc.
+
+Paginated, searchable, and filterable product listing UI.
+
+Product detail page with image zoom, spec sheet, and “Add to Cart” button.
+
+🛍️ Shopping Cart:
+Add/update/delete items in cart.
+
+Persist cart in localStorage.
+
+Show subtotal and taxes.
+
+Button to proceed to checkout.
+
+💳 Checkout & Payments:
+Checkout page for user billing/shipping details.
+
+Payment gateway integration with Razorpay (test mode ok).
+
+Firestore collection to log orders: orders with cart items, user info, timestamp, payment status.
+
+🧰 Service Booking System:
+Booking form: name, phone, service type (plumbing/electrical), date, time, address, notes.
+
+Calendar picker (prevent past date booking).
+
+Store booking data in Firestore bookings collection.
+
+Auto email/SMS confirmation (simulate notification using nodemailer or mock function).
+
+🛠️ Admin Dashboard:
+Secure login for admin (email/password using Firebase Auth).
+
+Add/edit/delete products.
+
+View orders and service bookings.
+
+Simple charts for sales, stock alerts, booking trends.
+
+🌐 Multilingual Support:
+Toggle between English and Tamil.
+
+Use i18n library for language switching.
+
+🔐 Authentication (User & Admin):
+User signup/login using Firebase Authentication.
+
+Login with email/password or phone number.
+
+Auth-protected routes for orders, dashboard, etc.
+
+👤 User Profile:
+View past orders and bookings.
+
+Edit contact info and password.
+
+📱 Mobile-First & UX-Focused:
+Use TailwindCSS or Material UI for responsive layouts.
+
+Optimize for low-end Android phones.
+
+Add loading skeletons, error states, confirmation modals.
+
+Fast image loading with lazy loading.
+
+📈 Performance:
+All Firestore queries paginated.
+
+No blocking network calls.
+
+Form validation and client-side error handling.
+
+⚙️ Technical Structure:
+Use React Router for frontend routing.
+
+Use context or Redux (if needed) for cart and auth state.
+
+Use Express routes to handle API requests securely.
+
+Store .env values (Firebase config, Razorpay keys) properly.
+
+Use ESLint + Prettier for code quality.
+
+✅ Final Requirements:
+Host-ready code for Replit.
+
+Clean, maintainable folder structure (/client, /server).
+
+README with setup instructions.
+
+Include mock data if needed (e.g., 10 sample products & services).
+
+Avoid any UI that breaks responsiveness.
+
+Focus on micro-level detail, accessibility, and a high-quality codebase. Prioritize a world-class user experience on both desktop and mobile. Do not cut corners. This is meant to feel like a real consumer-grade application.
